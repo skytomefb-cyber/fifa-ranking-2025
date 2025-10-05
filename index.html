@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Rank FIFA Amore — Final 150</title>
+<style>
+  :root{
+    --bg:#f0f4fb;
+    --card:#ffffff;
+    --accent1:#005bbb;
+    --accent2:#00aaff;
+    --muted:#6b7785;
+  }
+  html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;}
+  body{
+    background: linear-gradient(180deg,#e9f6ff 0%, #f6fbff 100%);
+    color:#122233;
+    padding:18px;
+    box-sizing:border-box;
+  }
+  h1{ text-align:center;color:var(--accent1); margin:6px 0 12px; font-size:1.6rem;}
+  .topbar{max-width:1200px;margin:0 auto 12px;display:flex;gap:12px;align-items:center;justify-content:space-between;}
+  #search{flex:1;min-width:220px;padding:10px 12px;border-radius:8px;border:1px solid #d6e9fb;font-size:15px;background:white;}
+  .controls{display:flex;gap:8px;align-items:center;}
+  .btn{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#fff;padding:8px 12px;border-radius:8px;border:0;cursor:pointer;font-weight:600;}
+  .btn.secondary{background:#fff;border:1px solid #d6e9fb;color:var(--accent1);}
+  .card{max-width:1200px;margin:0 auto;background:var(--card);border-radius:12px;box-shadow:0 6px 20px rgba(8,40,80,0.06);overflow:auto;}
+  table{width:100%;border-collapse:collapse;min-width:760px;}
+  th,td{padding:10px 12px;border-bottom:1px solid #eef6ff;text-align:center;vertical-align:middle;}
+  th{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#fff;position:sticky;top:0;z-index:2;}
+  tbody tr:hover td{background:#fff7e6;}
+  td.country{display:flex;gap:10px;align-items:center;justify-content:flex-start}
+  .flag{font-size:20px}
+  .name{font-weight:700;text-align:left}
+  .points{font-family:monospace;font-weight:700}
+  .actions{display:flex;gap:6px;justify-content:center}
+  .small-btn{padding:6px 8px;border-radius:6px;border:0;cursor:pointer;font-weight:700}
+  .win{background:#4caf50;color:#fff}       /* +12 */
+  .draw{background:#ffb300;color:#fff}      /* +3 */
+  .lose{background:#e53935;color:#fff}      /* -10 */
+  .stat{font-weight:700}
+  .note{max-width:1200px;margin:12px auto;color:var(--muted); font-size:14px;text-align:center}
+  .reset{background:#fff;border:1px solid #d6e9fb;color:var(--accent1);padding:8px 10px;border-radius:8px;cursor:pointer}
+  /* row color by rank ranges */
+  tr.top td{background:#fff3cf}
+  tr.high td{background:#f0f8ff}
+  @media (max-width:920px){
+    table{min-width:800px}
+    th:nth-child(1),td:nth-child(1){display:none}
+  }
+</style>
+</head>
+<body>
+
+<h1>🏆 Rank FIFA Amore — Final 150</h1>
+
+<div class="topbar">
+  <input id="search" placeholder="Cari negara... (ketik nama negara)" />
+  <div class="controls">
+    <button class="btn" id="resetView">Reset View</button>
+    <button class="btn secondary" id="resetStorage" title="Reset semua poin ke awal">Reset Penyimpanan</button>
+  </div>
+</div>
+
+<div class="card" id="card">
+  <table id="rankingTable" aria-label="Ranking FIFA Amore">
+    <thead>
+      <tr>
+        <th style="width:64px">Rank</th>
+        <th style="text-align:left">Negara</th>
+        <th style="width:74px">Main</th>
+        <th style="width:74px">Menang</th>
+        <th style="width:74px">Seri</th>
+        <th style="width:74px">Kalah</th>
+        <th style="width:110px">Poin</th>
+        <th style="width:220px">Aksi</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<p class="note">Tombol <span style="background:#4caf50;color:#fff;padding:4px 6px;border-radius:4px">Menang +12</span>, <span style="background:#ffb300;color:#fff;padding:4px 6px;border-radius:4px">Seri +3</span>, <span style="background:#e53935;color:#fff;padding:4px 6px;border-radius:4px">Kalah −10</span>. Perubahan disimpan di browser kamu (localStorage).</p>
+
+<script>
+/* ---------- DATA: 150 negara (TOP10 points 3000, others 1500) ---------- */
+const TOP10 = ["Spanyol","Prancis","Argentina","Inggris","Portugal","Brasil","Belanda","Jerman","Kroasia","Italia"];
+
+const COUNTRIES = [
+"Spanyol 🇪🇸","Prancis 🇫🇷","Argentina 🇦🇷","Inggris 🏴","Portugal 🇵🇹","Brasil 🇧🇷","Belanda 🇳🇱","Jerman 🇩🇪","Kroasia 🇭🇷","Italia 🇮🇹",
+"Belgia 🇧🇪","Swiss 🇨🇭","Denmark 🇩🇰","Swedia 🇸🇪","Polandia 🇵🇱","Austria 🇦🇹","Republik Ceko 🇨🇿","Turki 🇹🇷","Rusia 🇷🇺","Ukraina 🇺🇦",
+"Serbia 🇷🇸","Norwegia 🇳🇴","Skotlandia 🏴","Wales 🏴","Finlandia 🇫🇮","Yunani 🇬🇷","Hungaria 🇭🇺","Slowakia 🇸🇰","Slovenia 🇸🇮","Bosnia & Herzegovina 🇧🇦",
+"Lituania 🇱🇹","Latvia 🇱🇻","Estonia 🇪🇪","Luksemburg 🇱🇺","Malta 🇲🇹","Siprus 🇨🇾","Israel 🇮🇱","Aljazair 🇩🇿","Maroko 🇲🇦","Tunisia 🇹🇳",
+"Mesir 🇪🇬","Nigeria 🇳🇬","Senegal 🇸🇳","Kamerun 🇨🇲","Ghana 🇬🇭","Pantai Gading 🇨🇮","DR Kongo 🇨🇩","Angola 🇦🇴","Afrika Selatan 🇿🇦","Madagaskar 🇲🇬",
+"Kenya 🇰🇪","Uganda 🇺🇬","Tanzania 🇹🇿","Ethiopia 🇪🇹","Mozambik 🇲🇿","Zambia 🇿🇲","Zimbabwe 🇿🇼","Botswana 🇧🇼","Mauritius 🇲🇺","Cape Verde 🇨🇻",
+"China 🇨🇳","India 🇮🇳","Pakistan 🇵🇰","Bangladesh 🇧🇩","Indonesia 🇮🇩","Thailand 🇹🇭","Vietnam 🇻🇳","Malaysia 🇲🇾","Singapura 🇸🇬","Filipina 🇵🇭",
+"Nepal 🇳🇵","Sri Lanka 🇱🇰","Myanmar 🇲🇲","Kamboja 🇰🇭","Laos 🇱🇦","Mongolia 🇲🇳","Kazakhstan 🇰🇿","Uzbekistan 🇺🇿","Kyrgyzstan 🇰🇬","Tajikistan 🇹🇯",
+"Turkmenistan 🇹🇲","Afghanistan 🇦🇫","Irak 🇮🇶","Siria 🇸🇾","Lebanon 🇱🇧","Yordania 🇯🇴","Palestina 🇵🇸","Uni Emirat Arab 🇦🇪","Qatar 🇶🇦","Kuwait 🇰🇼",
+"Oman 🇴🇲","Bahrain 🇧🇭","Yaman 🇾🇪","Korea Utara 🇰🇵","Korea Selatan 🇰🇷","Jepang 🇯🇵","Australia 🇦🇺","Selandia Baru 🇳🇿","Amerika Serikat 🇺🇸","Kanada 🇨🇦",
+"Meksiko 🇲🇽","Kosta Rika 🇨🇷","Panama 🇵🇦","Honduras 🇭🇳","El Salvador 🇸🇻","Guatemala 🇬🇹","Jamaika 🇯🇲","Trinidad & Tobago 🇹🇹","Kuba 🇨🇺","Republik Dominika 🇩🇴",
+"Haiti 🇭🇹","Bahama 🇧🇸","Belize 🇧🇿","Barbados 🇧🇧","Saint Kitts & Nevis 🇰🇳","Bolivia 🇧🇴","Peru 🇵🇪","Ekuador 🇪🇨","Kolombia 🇨🇴","Venezuela 🇻🇪",
+"Paraguay 🇵🇾","Uruguay 🇺🇾","Cile 🇨🇱","Guyana 🇬🇾","Suriname 🇸🇷","Greenland 🇬🇱","Albania 🇦🇱","Makedonia Utara 🇲🇰","Kosovo 🇽🇰","Montenegro 🇲🇪",
+"Armenia 🇦🇲","Georgia 🇬🇪","Azerbaijan 🇦🇿","Maldives 🇲🇻","Bhutan 🇧🇹","Timor Leste 🇹🇱","Samoa 🇼🇸","Tonga 🇹🇴","Vanuatu 🇻🇺","Solomon Islands 🇸🇧",
+"Fiji 🇫🇯","Papua New Guinea 🇵🇬","Nauru 🇳🇷","Tuvalu 🇹🇻","Kiribati 🇰🇮","Guinea 🇬🇳","Guinea-Bissau 🇬🇼","Liberia 🇱🇷","Sierra Leone 🇸🇱","Equatorial Guinea 🇬🇶"
+];
+
+/* ---------- Defaults ---------- */
+const STORAGE_KEY = "amore_fifa_global_v2";
+
+/* build default stats object:
+   for each country:
+     points = 3000 if top10 else 1500
+     played, win, draw, loss = 0
+*/
+const DEFAULTS = {};
+COUNTRIES.forEach(name => {
+  // remove flag for key compare
+  const short = name.split(" ")[0]; // simple key (first token)
+  const baseName = name; // use full string as display key
+  DEFAULTS[baseName] = {
+    points: TOP10.includes(short) || TOP10.includes(baseName.split(" ")[0]) ? 3000 : 1500,
+    played: 0,
+    win: 0,
+    draw: 0,
+    loss: 0
+  };
+});
+
+/* load saved or fallback to defaults */
+function loadData(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      // ensure all countries present
+      Object.keys(DEFAULTS).forEach(k => {
+        if(!(k in parsed)) parsed[k] = {...DEFAULTS[k]};
+      });
+      return parsed;
+    }
+  }catch(e){
+    console.warn("loadData failed", e);
+  }
+  // deep copy defaults
+  const copy = {};
+  Object.keys(DEFAULTS).forEach(k => copy[k] = {...DEFAULTS[k]});
+  return copy;
+}
+
+/* save */
+function saveData(map){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(map));
+  }catch(e){
+    console.warn("save failed", e);
+  }
+}
+
+/* global points map */
+let stats = loadData();
+
+/* render table (sorted by points desc) */
+function renderTable(filter=""){
+  const tbody = document.querySelector("#rankingTable tbody");
+  tbody.innerHTML = "";
+
+  const arr = Object.keys(stats).map(name => ({
+    name,
+    flagName: name,
+    ...stats[name]
+  }));
+
+  // apply filter
+  const f = filter.trim().toLowerCase();
+
+  // sort
+  arr.sort((a,b) => b.points - a.points || a.name.localeCompare(b.name));
+
+  arr.forEach((row, idx) => {
+    if(f && !row.name.toLowerCase().includes(f)) return;
+
+    const tr = document.createElement("tr");
+    if(idx < 10) tr.classList.add("top");
+    else if(idx < 50) tr.classList.add("high");
+
+    tr.innerHTML = `
+      <td style="font-weight:700">${idx+1}</td>
+      <td class="country" style="text-align:left"><span class="flag">${row.flagName.split(" ")[row.flagName.split(" ").length-1].match(/[\u{1F1E6}-\u{1F1FF}]/u) ? "" : ""}</span><div style="display:flex;flex-direction:column;align-items:flex-start"><span class="name">${row.name}</span></div></td>
+      <td class="stat">${row.played}</td>
+      <td class="stat">${row.win}</td>
+      <td class="stat">${row.draw}</td>
+      <td class="stat">${row.loss}</td>
+      <td class="points" data-name="${row.name}">${row.points}</td>
+      <td class="actions">
+        <button class="small-btn win" data-action="win" data-name="${row.name}" title="+12">Menang +12</button>
+        <button class="small-btn draw" data-action="draw" data-name="${row.name}" title="+3">Seri +3</button>
+        <button class="small-btn lose" data-action="lose" data-name="${row.name}" title="-10">Kalah −10</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  attachHandlers();
+}
+
+/* attach click handlers to action buttons */
+function attachHandlers(){
+  document.querySelectorAll("#rankingTable button[data-action]").forEach(btn => {
+    btn.onclick = () => {
+      const name = btn.dataset.name;
+      const action = btn.dataset.action;
+      if(!name || !action) return;
+
+      if(!(name in stats)) return;
+
+      let delta = 0;
+      if(action === "win") delta = 12;
+      else if(action === "draw") delta = 3;
+      else if(action === "lose") delta = -10;
+
+      stats[name].points = Math.max(0, Number(stats[name].points) + delta);
+      // update matches/stats
+      stats[name].played = Number(stats[name].played) + 1;
+      if(action === "win") stats[name].win = Number(stats[name].win) + 1;
+      if(action === "draw") stats[name].draw = Number(stats[name].draw) + 1;
+      if(action === "lose") stats[name].loss = Number(stats[name].loss) + 1;
+
+      saveData(stats);
+      renderTable(document.getElementById("search").value || "");
+    };
+  });
+}
+
+/* reset storage */
+document.getElementById("resetStorage").addEventListener("click", () => {
+  if(!confirm("Reset semua poin & statistik ke nilai awal?")) return;
+  stats = loadData(); // reload defaults
+  // reset values to defaults (points and zero stats)
+  Object.keys(stats).forEach(k => {
+    stats[k].points = TOP10.includes(k.split(" ")[0]) ? 3000 : 1500;
+    stats[k].played = 0;
+    stats[k].win = 0;
+    stats[k].draw = 0;
+    stats[k].loss = 0;
+  });
+  saveData(stats);
+  renderTable(document.getElementById("search").value || "");
+});
+
+/* reset view (reload from storage) */
+document.getElementById("resetView").addEventListener("click", () => {
+  stats = loadData();
+  renderTable(document.getElementById("search").value || "");
+});
+
+/* search */
+document.getElementById("search").addEventListener("input", e => {
+  renderTable(e.target.value || "");
+});
+
+/* initial render */
+renderTable();
+
+/* ensure saved on unload */
+window.addEventListener("beforeunload", () => saveData(stats));
+</script>
+
+</body>
+</html>
