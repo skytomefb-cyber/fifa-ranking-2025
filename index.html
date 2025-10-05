@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Rank FIFA Amore — Final 150</title>
+<title>Rank FIFA Amore — 151 Negara</title>
 <style>
   :root{
     --bg:#f0f4fb;
@@ -42,7 +42,6 @@
   .stat{font-weight:700}
   .note{max-width:1200px;margin:12px auto;color:var(--muted); font-size:14px;text-align:center}
   .reset{background:#fff;border:1px solid #d6e9fb;color:var(--accent1);padding:8px 10px;border-radius:8px;cursor:pointer}
-  /* row color by rank ranges */
   tr.top td{background:#fff3cf}
   tr.high td{background:#f0f8ff}
   @media (max-width:920px){
@@ -53,7 +52,7 @@
 </head>
 <body>
 
-<h1>🏆 Rank FIFA Amore — Final 150</h1>
+<h1>🏆 Rank FIFA Amore — 151 Negara</h1>
 
 <div class="topbar">
   <input id="search" placeholder="Cari negara... (ketik nama negara)" />
@@ -84,9 +83,10 @@
 <p class="note">Tombol <span style="background:#4caf50;color:#fff;padding:4px 6px;border-radius:4px">Menang +12</span>, <span style="background:#ffb300;color:#fff;padding:4px 6px;border-radius:4px">Seri +3</span>, <span style="background:#e53935;color:#fff;padding:4px 6px;border-radius:4px">Kalah −10</span>. Perubahan disimpan di browser kamu (localStorage).</p>
 
 <script>
-/* ---------- DATA: 150 negara (TOP10 points 3000, others 1500) ---------- */
+/* ---------- TOP10 (nama awal matching display) ---------- */
 const TOP10 = ["Spanyol","Prancis","Argentina","Inggris","Portugal","Brasil","Belanda","Jerman","Kroasia","Italia"];
 
+/* ---------- 151 negara (display: Nama + emoji) ---------- */
 const COUNTRIES = [
 "Spanyol 🇪🇸","Prancis 🇫🇷","Argentina 🇦🇷","Inggris 🏴","Portugal 🇵🇹","Brasil 🇧🇷","Belanda 🇳🇱","Jerman 🇩🇪","Kroasia 🇭🇷","Italia 🇮🇹",
 "Belgia 🇧🇪","Swiss 🇨🇭","Denmark 🇩🇰","Swedia 🇸🇪","Polandia 🇵🇱","Austria 🇦🇹","Republik Ceko 🇨🇿","Turki 🇹🇷","Rusia 🇷🇺","Ukraina 🇺🇦",
@@ -96,30 +96,26 @@ const COUNTRIES = [
 "Kenya 🇰🇪","Uganda 🇺🇬","Tanzania 🇹🇿","Ethiopia 🇪🇹","Mozambik 🇲🇿","Zambia 🇿🇲","Zimbabwe 🇿🇼","Botswana 🇧🇼","Mauritius 🇲🇺","Cape Verde 🇨🇻",
 "China 🇨🇳","India 🇮🇳","Pakistan 🇵🇰","Bangladesh 🇧🇩","Indonesia 🇮🇩","Thailand 🇹🇭","Vietnam 🇻🇳","Malaysia 🇲🇾","Singapura 🇸🇬","Filipina 🇵🇭",
 "Nepal 🇳🇵","Sri Lanka 🇱🇰","Myanmar 🇲🇲","Kamboja 🇰🇭","Laos 🇱🇦","Mongolia 🇲🇳","Kazakhstan 🇰🇿","Uzbekistan 🇺🇿","Kyrgyzstan 🇰🇬","Tajikistan 🇹🇯",
-"Turkmenistan 🇹🇲","Afghanistan 🇦🇫","Irak 🇮🇶","Siria 🇸🇾","Lebanon 🇱🇧","Yordania 🇯🇴","Palestina 🇵🇸","Uni Emirat Arab 🇦🇪","Qatar 🇶🇦","Kuwait 🇰🇼",
+"Turkmenistan 🇹🇲","Afghanistan 🇦🇫","Irak 🇮🇶","Suriah 🇸🇾","Lebanon 🇱🇧","Yordania 🇯🇴","Palestina 🇵🇸","Uni Emirat Arab 🇦🇪","Qatar 🇶🇦","Kuwait 🇰🇼",
 "Oman 🇴🇲","Bahrain 🇧🇭","Yaman 🇾🇪","Korea Utara 🇰🇵","Korea Selatan 🇰🇷","Jepang 🇯🇵","Australia 🇦🇺","Selandia Baru 🇳🇿","Amerika Serikat 🇺🇸","Kanada 🇨🇦",
 "Meksiko 🇲🇽","Kosta Rika 🇨🇷","Panama 🇵🇦","Honduras 🇭🇳","El Salvador 🇸🇻","Guatemala 🇬🇹","Jamaika 🇯🇲","Trinidad & Tobago 🇹🇹","Kuba 🇨🇺","Republik Dominika 🇩🇴",
 "Haiti 🇭🇹","Bahama 🇧🇸","Belize 🇧🇿","Barbados 🇧🇧","Saint Kitts & Nevis 🇰🇳","Bolivia 🇧🇴","Peru 🇵🇪","Ekuador 🇪🇨","Kolombia 🇨🇴","Venezuela 🇻🇪",
 "Paraguay 🇵🇾","Uruguay 🇺🇾","Cile 🇨🇱","Guyana 🇬🇾","Suriname 🇸🇷","Greenland 🇬🇱","Albania 🇦🇱","Makedonia Utara 🇲🇰","Kosovo 🇽🇰","Montenegro 🇲🇪",
-"Armenia 🇦🇲","Georgia 🇬🇪","Azerbaijan 🇦🇿","Maldives 🇲🇻","Bhutan 🇧🇹","Timor Leste 🇹🇱","Samoa 🇼🇸","Tonga 🇹🇴","Vanuatu 🇻🇺","Solomon Islands 🇸🇧",
-"Fiji 🇫🇯","Papua New Guinea 🇵🇬","Nauru 🇳🇷","Tuvalu 🇹🇻","Kiribati 🇰🇮","Guinea 🇬🇳","Guinea-Bissau 🇬🇼","Liberia 🇱🇷","Sierra Leone 🇸🇱","Equatorial Guinea 🇬🇶"
+"Armenia 🇦🇲","Georgia 🇬🇪","Azerbaijan 🇦🇿","Maladewa 🇲🇻","Bhutan 🇧🇹","Timor Leste 🇹🇱","Samoa 🇼🇸","Tonga 🇹🇴","Vanuatu 🇻🇺","Solomon Islands 🇸🇧",
+"Fiji 🇫🇯","Papua New Guinea 🇵🇬","Nauru 🇳🇷","Tuvalu 🇹🇻","Kiribati 🇰🇮","Guinea 🇬🇳","Guinea-Bissau 🇬🇼","Liberia 🇱🇷","Sierra Leone 🇸🇱","Equatorial Guinea 🇬🇶",
+"Brunei Darussalam 🇧🇳"
 ];
 
-/* ---------- Defaults ---------- */
-const STORAGE_KEY = "amore_fifa_global_v2";
+/* ---------- Defaults & storage ---------- */
+const STORAGE_KEY = "amore_fifa_151_v1";
 
-/* build default stats object:
-   for each country:
-     points = 3000 if top10 else 1500
-     played, win, draw, loss = 0
-*/
+/* build default stats for each country */
 const DEFAULTS = {};
 COUNTRIES.forEach(name => {
-  // remove flag for key compare
-  const short = name.split(" ")[0]; // simple key (first token)
-  const baseName = name; // use full string as display key
-  DEFAULTS[baseName] = {
-    points: TOP10.includes(short) || TOP10.includes(baseName.split(" ")[0]) ? 3000 : 1500,
+  // determine top10 by checking start of display name
+  const isTop = TOP10.some(t => name.startsWith(t));
+  DEFAULTS[name] = {
+    points: isTop ? 3000 : 1500,
     played: 0,
     win: 0,
     draw: 0,
@@ -127,7 +123,7 @@ COUNTRIES.forEach(name => {
   };
 });
 
-/* load saved or fallback to defaults */
+/* load saved or fallback */
 function loadData(){
   try{
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -139,9 +135,7 @@ function loadData(){
       });
       return parsed;
     }
-  }catch(e){
-    console.warn("loadData failed", e);
-  }
+  }catch(e){ console.warn("loadData failed", e); }
   // deep copy defaults
   const copy = {};
   Object.keys(DEFAULTS).forEach(k => copy[k] = {...DEFAULTS[k]});
@@ -150,31 +144,24 @@ function loadData(){
 
 /* save */
 function saveData(map){
-  try{
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(map));
-  }catch(e){
-    console.warn("save failed", e);
-  }
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(map)); }catch(e){ console.warn("save failed", e); }
 }
 
-/* global points map */
+/* global stats */
 let stats = loadData();
 
-/* render table (sorted by points desc) */
+/* render table */
 function renderTable(filter=""){
   const tbody = document.querySelector("#rankingTable tbody");
   tbody.innerHTML = "";
 
   const arr = Object.keys(stats).map(name => ({
     name,
-    flagName: name,
     ...stats[name]
   }));
 
-  // apply filter
-  const f = filter.trim().toLowerCase();
+  const f = (filter || "").trim().toLowerCase();
 
-  // sort
   arr.sort((a,b) => b.points - a.points || a.name.localeCompare(b.name));
 
   arr.forEach((row, idx) => {
@@ -186,7 +173,7 @@ function renderTable(filter=""){
 
     tr.innerHTML = `
       <td style="font-weight:700">${idx+1}</td>
-      <td class="country" style="text-align:left"><span class="flag">${row.flagName.split(" ")[row.flagName.split(" ").length-1].match(/[\u{1F1E6}-\u{1F1FF}]/u) ? "" : ""}</span><div style="display:flex;flex-direction:column;align-items:flex-start"><span class="name">${row.name}</span></div></td>
+      <td class="country" style="text-align:left"><span class="flag">${getFlagFromName(row.name)}</span><div style="display:flex;flex-direction:column;align-items:flex-start"><span class="name">${row.name}</span></div></td>
       <td class="stat">${row.played}</td>
       <td class="stat">${row.win}</td>
       <td class="stat">${row.draw}</td>
@@ -204,14 +191,22 @@ function renderTable(filter=""){
   attachHandlers();
 }
 
-/* attach click handlers to action buttons */
+/* helper to try display flag (we already include emoji in name, but this extracts) */
+function getFlagFromName(name){
+  // if name contains emoji at the end, extract it
+  const m = name.match(/(\p{Emoji_Presentation}|\p{Regional_Indicator})+$/u);
+  if(m && m[0]) return m[0] + " ";
+  // fallback none
+  return "";
+}
+
+/* attach click handlers for action buttons */
 function attachHandlers(){
   document.querySelectorAll("#rankingTable button[data-action]").forEach(btn => {
     btn.onclick = () => {
       const name = btn.dataset.name;
       const action = btn.dataset.action;
       if(!name || !action) return;
-
       if(!(name in stats)) return;
 
       let delta = 0;
@@ -220,7 +215,6 @@ function attachHandlers(){
       else if(action === "lose") delta = -10;
 
       stats[name].points = Math.max(0, Number(stats[name].points) + delta);
-      // update matches/stats
       stats[name].played = Number(stats[name].played) + 1;
       if(action === "win") stats[name].win = Number(stats[name].win) + 1;
       if(action === "draw") stats[name].draw = Number(stats[name].draw) + 1;
@@ -232,29 +226,22 @@ function attachHandlers(){
   });
 }
 
-/* reset storage */
+/* reset storage to defaults */
 document.getElementById("resetStorage").addEventListener("click", () => {
-  if(!confirm("Reset semua poin & statistik ke nilai awal?")) return;
-  stats = loadData(); // reload defaults
-  // reset values to defaults (points and zero stats)
-  Object.keys(stats).forEach(k => {
-    stats[k].points = TOP10.includes(k.split(" ")[0]) ? 3000 : 1500;
-    stats[k].played = 0;
-    stats[k].win = 0;
-    stats[k].draw = 0;
-    stats[k].loss = 0;
-  });
+  if(!confirm("Reset semua poin & statistik ke nilai awal (top10=3000, lainnya=1500)?")) return;
+  stats = {};
+  Object.keys(DEFAULTS).forEach(k => { stats[k] = {...DEFAULTS[k]}; });
   saveData(stats);
   renderTable(document.getElementById("search").value || "");
 });
 
-/* reset view (reload from storage) */
+/* reset view from storage (re-render) */
 document.getElementById("resetView").addEventListener("click", () => {
   stats = loadData();
   renderTable(document.getElementById("search").value || "");
 });
 
-/* search */
+/* search input */
 document.getElementById("search").addEventListener("input", e => {
   renderTable(e.target.value || "");
 });
