@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Rank FIFA Amore — Final 150</title>
+<title>Rank FIFA Amore </title>
 <style>
   :root{
     --bg:#f0f4fb;
@@ -53,7 +53,7 @@
 </head>
 <body>
 
-<h1>🏆 Rank FIFA Amore — Final 150</h1>
+<h1>🏆 Rank FIFA Amore </h1>
 
 <div class="topbar">
   <input id="search" placeholder="Cari negara... (ketik nama negara)" />
@@ -81,10 +81,10 @@
   </table>
 </div>
 
-<p class="note">Tombol <span style="background:#4caf50;color:#fff;padding:4px 6px;border-radius:4px">Menang +12</span>, <span style="background:#ffb300;color:#fff;padding:4px 6px;border-radius:4px">Seri +3</span>, <span style="background:#e53935;color:#fff;padding:4px 6px;border-radius:4px">Kalah −10</span>. Perubahan disimpan di browser kamu (localStorage).</p>
+<p class="note">Tombol <span style="background:#4caf50;color:#fff;padding:4px 6px;border-radius:4px">Menang +20</span>, <span style="background:#ffb300;color:#fff;padding:4px 6px;border-radius:4px">Seri +5</span>, <span style="background:#e53935;color:#fff;padding:4px 6px;border-radius:4px">Kalah −5</span>. Perubahan disimpan di browser kamu (localStorage).</p>
 
 <script>
-/* ---------- DATA: 150 negara (TOP10 points 3000, others 1500) ---------- */
+/* ---------- DATA: 150 negara (TOP10 points 2000, others 1500) ---------- */
 const TOP10 = ["Spanyol","Prancis","Argentina","Inggris","Portugal","Brasil","Belanda","Jerman","Kroasia","Italia"];
 
 const COUNTRIES = [
@@ -110,7 +110,7 @@ const STORAGE_KEY = "amore_fifa_global_v2";
 
 /* build default stats object:
    for each country:
-     points = 3000 if top10 else 1500
+     points = 2000 if top10 else 1500
      played, win, draw, loss = 0
 */
 const DEFAULTS = {};
@@ -193,9 +193,9 @@ function renderTable(filter=""){
       <td class="stat">${row.loss}</td>
       <td class="points" data-name="${row.name}">${row.points}</td>
       <td class="actions">
-        <button class="small-btn win" data-action="win" data-name="${row.name}" title="+12">Menang +12</button>
-        <button class="small-btn draw" data-action="draw" data-name="${row.name}" title="+3">Seri +3</button>
-        <button class="small-btn lose" data-action="lose" data-name="${row.name}" title="-10">Kalah −10</button>
+        <button class="small-btn win" data-action="win" data-name="${row.name}" title="+20">Menang +20</button>
+        <button class="small-btn draw" data-action="draw" data-name="${row.name}" title="+5">Seri +5</button>
+        <button class="small-btn lose" data-action="lose" data-name="${row.name}" title="-5">Kalah −5</button>
       </td>
     `;
     tbody.appendChild(tr);
@@ -215,9 +215,9 @@ function attachHandlers(){
       if(!(name in stats)) return;
 
       let delta = 0;
-      if(action === "win") delta = 12;
-      else if(action === "draw") delta = 3;
-      else if(action === "lose") delta = -10;
+      if(action === "win") delta = 20;
+      else if(action === "draw") delta = 5;
+      else if(action === "lose") delta = -5;
 
       stats[name].points = Math.max(0, Number(stats[name].points) + delta);
       // update matches/stats
